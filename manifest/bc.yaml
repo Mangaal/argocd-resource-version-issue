@@ -1,0 +1,44 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  annotations:
+    example.com/configuration-level: "3"
+  labels:
+    app: core
+    app-type: bee
+  name: core
+  namespace: test
+spec:
+  completionDeadlineSeconds: 3600
+  failedBuildsHistoryLimit: 1
+  nodeSelector: {}
+  output:
+    pushSecret:
+      name: quay-builder
+    to:
+      kind: DockerImage
+      name: registry/aaa0/bbb:v1.0.0
+  postCommit: {}
+  resources:
+    requests:
+      cpu: 83m
+      memory: 118Mi
+  source:
+    binary: {}
+    type: Binary
+  strategy:
+    sourceStrategy:
+      env:
+      - name: noproxy
+        value: .svc,.cluster.local
+      - name: NOPROXY
+        value: .svc,.cluster.local
+      - name: ARTIFACT_URL
+        value: https://artifactory/version-1.0.0
+      forcePull: true
+      from:
+        kind: DockerImage
+        name: registry/aaa0/bbb:version-1.0.0
+      scripts: image:///usr/local/ocp/.s2i/bin/
+    type: Source
+  successfulBuildsHistoryLimit: 2

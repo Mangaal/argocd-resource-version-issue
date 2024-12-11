@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: core
+  namespace: openshift-gitops
+spec:
+  destination:
+    namespace: test
+    server: https://kubernetes.default.svc
+  ignoreDifferences:
+  - group: build.openshift.io
+    jsonPointers:
+    - /metadata/resourceVersion
+    kind: BuildConfig
+    namespace: test
+  project: default
+  source:
+    path: ./manifest
+    repoURL: https://github.com/gizzi-rh/argocd-resource-version-issue.git
+    targetRevision: main
+  syncPolicy:
+    automated:
+      selfHeal: true
+    syncOptions:
+    - RespectIgnoreDifferences=true
