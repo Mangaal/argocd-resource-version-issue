@@ -4,7 +4,7 @@ metadata:
   annotations:
     example.com/configuration-level: "3"
   labels:
-    app: core-1
+    app: core
     app-type: bee
   name: core
   namespace: test-3
